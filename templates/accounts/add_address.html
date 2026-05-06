@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Add Address | E-Store{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-lg p-4 p-md-5 rounded-4">
+            <h2 class="fw-bold mb-4">{% if edit %}Edit{% else %}Add New{% endif %} Address</h2>
+            <form method="post">
+                {% csrf_token %}
+                <div class="row g-3">
+                    {% for field in form %}
+                        <div class="col-{% if field.name == 'city' or field.name == 'state' or field.name == 'zip_code' %}4{% else %}12{% endif %}">
+                            {% if field.name == 'is_default' %}
+                                <div class="form-check mt-2">
+                                    {{ field }}
+                                    <label class="form-check-label small" for="{{ field.id_for_label }}">Set as default address</label>
+                                </div>
+                            {% else %}
+                                <label class="form-label small fw-bold">{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.errors %}
+                                    <div class="text-danger small">{{ field.errors|striptags }}</div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-3 rounded-3 fw-bold mt-5">{% if edit %}Update{% else %}Save{% endif %} Address</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

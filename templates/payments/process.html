@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Processing Payment | E-Store{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-lg p-5 rounded-4 text-center">
+            <div class="mb-4">
+                <i class="fas fa-lock text-primary fs-1"></i>
+            </div>
+            <h2 class="fw-bold mb-3">Secure Payment</h2>
+            <p class="text-secondary mb-4">Order #{{ order.id }} • Total: <span class="fw-bold text-dark">${{ order.total_amount }}</span></p>
+            
+            <form method="post">
+                {% csrf_token %}
+                <div class="bg-light p-4 rounded-4 mb-4 text-start">
+                    <h6 class="fw-bold mb-3">Choose Payment Method</h6>
+                    
+                    <!-- Wallet Option -->
+                    <div class="form-check border rounded-4 p-3 mb-3 bg-white">
+                        <input class="form-check-input ms-0 me-3" type="radio" name="payment_method" id="wallet" value="Wallet" {% if user.balance < order.total_amount %}disabled{% else %}checked{% endif %}>
+                        <label class="form-check-label d-flex justify-content-between align-items-center w-100" for="wallet">
+                            <div>
+                                <i class="fas fa-wallet text-success me-2"></i><strong>Wallet Balance</strong>
+                                <p class="small text-secondary mb-0">Current: ${{ user.balance }}</p>
+                            </div>
+                            {% if user.balance < order.total_amount %}
+                                <span class="badge bg-danger">Insufficient Funds</span>
+                            {% endif %}
+                        </label>
+                    </div>
+
+                    <!-- UPI Option -->
+                    <div class="form-check border rounded-4 p-3 mb-3 bg-white">
+                        <input class="form-check-input ms-0 me-3" type="radio" name="payment_method" id="upi" value="UPI" onclick="toggleFields('upi-fields')">
+                        <label class="form-check-label" for="upi">
+                            <i class="fas fa-mobile-alt text-primary me-2"></i><strong>UPI / Google Pay / PhonePe</strong>
+                        </label>
+                        <div id="upi-fields" class="payment-fields mt-3 d-none">
+                            <input type="text" class="form-control" placeholder="Enter UPI ID (e.g., user@okaxis)">
+                        </div>
+                    </div>
+
+                    <!-- Online/Card Option -->
+                    <div class="form-check border rounded-4 p-3 mb-3 bg-white">
+                        <input class="form-check-input ms-0 me-3" type="radio" name="payment_method" id="card" value="Online" onclick="toggleFields('card-fields')">
+                        <label class="form-check-label" for="card">
+                            <i class="fas fa-credit-card text-primary me-2"></i><strong>Credit / Debit Card</strong>
+                        </label>
+                        <div id="card-fields" class="payment-fields mt-3 d-none">
+                            <div class="mb-2">
+                                <input type="text" class="form-control" placeholder="Card Number">
+                            </div>
+                            <div class="row g-2">
+                                <div class="col-6"><input type="text" class="form-control" placeholder="MM/YY"></div>
+                                <div class="col-6"><input type="text" class="form-control" placeholder="CVV"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Net Banking Option -->
+                    <div class="form-check border rounded-4 p-3 mb-3 bg-white">
+                        <input class="form-check-input ms-0 me-3" type="radio" name="payment_method" id="netbanking" value="Net Banking" onclick="toggleFields('bank-fields')">
+                        <label class="form-check-label" for="netbanking">
+                            <i class="fas fa-university text-primary me-2"></i><strong>Net Banking</strong>
+                        </label>
+                        <div id="bank-fields" class="payment-fields mt-3 d-none">
+                            <select class="form-select">
+                                <option selected>Select your bank</option>
+                                <option>HDFC Bank</option>
+                                <option>SBI</option>
+                                <option>ICICI Bank</option>
+                                <option>Axis Bank</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-3 rounded-3 fw-bold shadow-sm">
+                    Complete Payment
+                </button>
+            </form>
+            
+            <script>
+                function toggleFields(id) {
+                    document.querySelectorAll('.payment-fields').forEach(el => el.classList.add('d-none'));
+                    if (id) {
+                        document.getElementById(id).classList.remove('d-none');
+                    }
+                }
+                // Initial check for Wallet (no extra fields needed)
+                document.getElementById('wallet').onclick = () => toggleFields(null);
+            </script>
+            
+            <div class="mt-4">
+                <p class="small text-secondary mb-0"><i class="fas fa-shield-alt me-1"></i> Your payment is encrypted and secure.</p>
+                <a href="{% url 'payments:canceled' %}" class="btn btn-link text-decoration-none text-secondary small mt-2">Cancel and return to store</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

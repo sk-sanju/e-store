@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% load product_tags %}
+
+{% block title %}{{ product.name }} | E-Store{% endblock %}
+
+{% block content %}
+
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{% url 'products:product_list' %}" class="text-decoration-none">Home</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{{ product.category.get_absolute_url }}" class="text-decoration-none">
+                {{ product.category.name }}
+            </a>
+        </li>
+        <li class="breadcrumb-item active">{{ product.name }}</li>
+    </ol>
+</nav>
+
+<div class="row g-5">
+
+    <!-- ================= PRODUCT IMAGES ================= -->
+    <div class="col-lg-6">
+        <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+
+            <div class="carousel-inner rounded-4 shadow-sm bg-white">
+                {% for img in product.images.all %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <img src="{{ img.image.url }}"
+                             class="d-block w-100"
+                             style="height:500px; object-fit:contain;">
+                    </div>
+                {% empty %}
+                    <div class="carousel-item active text-center p-5">
+                        <i class="fas fa-image text-secondary fs-1 opacity-25"></i>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if product.images.all|length > 1 %}
+                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon bg-dark rounded-circle"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon bg-dark rounded-circle"></span>
+                </button>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <!-- ================= PRODUCT INFO ================= -->
+    <div class="col-lg-6">
+
+        <h1 class="fw-bold">{{ product.name }}</h1>
+
+        <div class="d-flex align-items-center gap-3 mb-3">
+
+            <div class="text-warning">
+                {% for i in "12345"|make_list %}
+                    <i class="{% if product.average_rating|default:0 >= forloop.counter %}fas{% else %}far{% endif %} fa-star"></i>
+                {% endfor %}
+                <span class="text-secondary small">
+                    ({{ product.reviews.count }} reviews)
+                </span>
+            </div>
+
+            {% if product.discount_price %}
+                <h3 class="text-primary mb-0">${{ product.discount_price }}</h3>
+                <del class="text-secondary">${{ product.price }}</del>
+            {% else %}
+                <h3 class="text-primary mb-0">${{ product.price }}</h3>
+            {% endif %}
+
+        </div>
+
+        <!-- ================= ADD TO CART ================= -->
+        <form action="{% url 'cart:cart_add' product.id %}" method="post">
+            {% csrf_token %}
+
+            <button type="submit"
+                    class="btn btn-primary w-100 py-3 fw-bold"
+                    {% if not product.is_in_stock %}disabled{% endif %}>
+                Add to Cart
+            </button>
+
+        </form>
+
+    </div>
+</div>
+
+<!-- ================= REVIEWS ================= -->
+<section class="py-5">
+
+    <div class="row g-5">
+
+        <!-- LEFT -->
+        <div class="col-lg-4">
+
+            <h3>Customer Reviews</h3>
+
+            <div class="mb-4">
+                <h1>{{ product.average_rating|default:0|stringformat:"0.1f" }}</h1>
+
+                {% for i in "12345"|make_list %}
+                    <i class="{% if product.average_rating|default:0 >= forloop.counter %}fas{% else %}far{% endif %} fa-star text-warning"></i>
+                {% endfor %}
+            </div>
+
+            <!-- SAFE RATING BARS -->
+            {% for i in "54321"|make_list %}
+                {% with percent=product|get_rating_percent:i count=product|get_rating_count:i %}
+
+                <div class="d-flex align-items-center gap-2 mb-2">
+
+                    <span style="width:20px;">{{ i }}</span>
+
+                    <div class="progress flex-grow-1" style="height:8px;">
+                        <div class="progress-bar bg-warning"
+                             style="width: {{ percent|default:0 }}%;">
+                        </div>
+                    </div>
+
+                    <small style="width:30px;">{{ count|default:0 }}</small>
+
+                </div>
+
+                {% endwith %}
+            {% endfor %}
+
+        </div>
+
+        <!-- RIGHT -->
+        <div class="col-lg-8">
+
+            {% if reviews %}
+                {% for review in reviews %}
+                    <div class="border rounded p-3 mb-3">
+
+                        <strong>{{ review.user.username }}</strong>
+
+                        <div class="text-warning">
+                            {% for i in "12345"|make_list %}
+                                <i class="{% if review.rating >= forloop.counter %}fas{% else %}far{% endif %} fa-star"></i>
+                            {% endfor %}
+                        </div>
+
+                        <p>{{ review.comment }}</p>
+
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No reviews yet</p>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

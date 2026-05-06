@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Order History | E-Store{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <h2 class="fw-bold mb-4">Your Orders</h2>
+        
+        {% if orders %}
+            {% for order in orders %}
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+                    <div class="card-header bg-white border-0 p-4 d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-secondary small mb-1">Order #{{ order.id }}</p>
+                            <p class="fw-bold mb-0">Placed on {{ order.created|date:"M d, Y" }}</p>
+                        </div>
+                        <div class="text-end">
+                            <span class="badge rounded-pill px-3 py-2 
+                                {% if order.status == 'Delivered' %}bg-success
+                                {% elif order.status == 'Processing' %}bg-primary
+                                {% elif order.status == 'Shipped' %}bg-info
+                                {% else %}bg-warning text-dark{% endif %}">
+                                {{ order.status }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body p-4 pt-0">
+                        <hr class="mt-0">
+                        {% for item in order.items.all %}
+                            <div class="d-flex align-items-center gap-3 mb-3">
+                                {% if item.product.images.all %}
+                                    <img src="{{ item.product.images.first.image.url }}" class="rounded-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                {% endif %}
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-0 fw-bold">{{ item.product.name }}</h6>
+                                    <p class="small text-secondary mb-0">Qty: {{ item.quantity }} • ${{ item.price }}</p>
+                                </div>
+                                <div class="text-end">
+                                    <span class="fw-bold">${{ item.get_cost }}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="card-footer bg-light border-0 p-4 d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-secondary small mb-1">Total Amount Paid</p>
+                            <h5 class="fw-bold text-primary mb-0">${{ order.total_amount }}</h5>
+                        </div>
+                        <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-white border rounded-pill px-4">View Details</a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-box-open text-secondary opacity-10 mb-4" style="font-size: 6rem;"></i>
+                <h4 class="fw-bold">No orders yet</h4>
+                <p class="text-secondary mb-4">You haven't placed any orders with us.</p>
+                <a href="{% url 'products:product_list' %}" class="btn btn-primary px-5 py-3 rounded-pill fw-bold">Start Shopping</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

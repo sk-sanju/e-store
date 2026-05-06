@@ -1,0 +1,351 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}E-Store | Premium E-commerce{% endblock %}</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --secondary-color: #6c757d;
+            --dark-bg: #0f172a;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.8) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color) !important;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: #475569 !important;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #025ce2;
+            transform: scale(1.02);
+        }
+
+        .btn-white {
+            background-color: white;
+            color: var(--primary-color);
+            border: none;
+        }
+
+        .btn-white:hover {
+            background-color: #f8fafc;
+            color: #025ce2;
+            transform: scale(1.02);
+        }
+
+        .footer {
+            background-color: var(--dark-bg);
+            color: #f8fafc;
+            padding: 4rem 0 2rem;
+            margin-top: 5rem;
+        }
+
+        .badge-cart {
+            font-size: 0.7rem;
+            position: absolute;
+            top: 0;
+            right: 0;
+            transform: translate(50%, -20%);
+        }
+
+        .search-bar {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+        }
+
+        .search-bar:focus {
+            background: white;
+            border-color: var(--primary-color);
+            box-shadow: none;
+        }
+
+        /* Marquee Animation */
+        .marquee-container {
+            white-space: nowrap;
+        }
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 30s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .skeleton-line {
+            height: 12px;
+            background: #e2e5e7;
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skeleton-box {
+            background: #e2e5e7;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skeleton-box.large {
+            height: 500px;
+        }
+
+        .skeleton-box.small {
+            height: 50px;
+        }
+
+        .skeleton-line::after,
+        .skeleton-box::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -150px;
+            width: 150px;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,0.6),
+                transparent
+            );
+            animation: shimmer 1.2s infinite;
+        }
+
+        @keyframes shimmer {
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .w-50 { width: 50%; }
+        .w-75 { width: 75%; }
+        .w-80 { width: 80%; }
+        .w-100 { width: 100%; }
+    </style>
+    {% block extra_css %}{% endblock %}
+
+</head>
+<body>
+
+    <div id="skeleton-loader">
+
+        <div class="container py-4">
+
+            <!-- Breadcrumb skeleton -->
+            <div class="skeleton-line w-50 mb-3"></div>
+
+            <div class="row g-4">
+
+                <!-- Image skeleton -->
+                <div class="col-lg-6">
+                    <div class="skeleton-box large"></div>
+                </div>
+
+                <!-- Info skeleton -->
+                <div class="col-lg-6">
+
+                    <div class="skeleton-line w-75 mb-2"></div>
+                    <div class="skeleton-line w-50 mb-4"></div>
+
+                    <div class="skeleton-line w-100 mb-2"></div>
+                    <div class="skeleton-line w-100 mb-2"></div>
+                    <div class="skeleton-line w-80 mb-4"></div>
+
+                    <div class="skeleton-box small mb-3"></div>
+                    <div class="skeleton-box small"></div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <!-- Announcement Bar -->
+    <div class="bg-dark text-white py-2 overflow-hidden position-relative" style="z-index: 1050;">
+        <div class="d-flex align-items-center marquee-container">
+            <div class="marquee-content py-1 px-4 small fw-bold">
+                <span class="me-5"><i class="fas fa-truck me-2"></i> FREE SHIPPING ON ORDERS ABOVE $100</span>
+                <span class="me-5"><i class="fas fa-gift me-2"></i> USE CODE "HANDLOOM10" FOR 10% OFF</span>
+                <span class="me-5"><i class="fas fa-certificate me-2"></i> 100% AUTHENTIC HANDLOOM PRODUCTS</span>
+                <span class="me-5"><i class="fas fa-truck me-2"></i> FREE SHIPPING ON ORDERS ABOVE $100</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'products:product_list' %}">
+                <i class="fas fa-shopping-bag me-2"></i>E-STORE
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <form class="d-flex mx-auto w-50" action="{% url 'products:product_search' %}" method="get">
+                    <input class="form-control search-bar" type="search" name="q" placeholder="Search for products..." aria-label="Search">
+                </form>
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'products:product_list' %}">Shop</a>
+                    </li>
+                    <li class="nav-item position-relative">
+                        <a class="nav-link px-3" href="{% url 'cart:cart_detail' %}">
+                            <i class="fas fa-shopping-cart fs-5"></i>
+                            <span class="badge rounded-pill bg-danger badge-cart">{{ cart_count }}</span>
+                        </a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle fs-5 me-1"></i> {{ user.username }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+                                <li><a class="dropdown-item" href="{% url 'accounts:profile' %}">My Profile</a></li>
+                                <li><a class="dropdown-item" href="{% url 'orders:order_history' %}">My Orders</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}">Logout</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'accounts:login' %}">Login</a>
+                        </li>
+                        <li class="nav-item ms-lg-2">
+                            <a class="btn btn-primary" href="{% url 'accounts:register' %}">Sign Up</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container py-5">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container text-center">
+            <div class="row g-4 mb-4">
+                <div class="col-md-4 text-md-start">
+                    <h5 class="fw-bold mb-3">E-STORE</h5>
+                    <p class="text-secondary small">Your one-stop destination for premium products. Quality and trust delivered to your doorstep.</p>
+                </div>
+                <div class="col-md-2 text-md-start">
+                    <h6 class="fw-bold mb-3">Quick Links</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a href="{% url 'products:about' %}" class="text-secondary text-decoration-none">About Us</a></li>
+                        <li class="mb-2"><a href="{% url 'products:contact' %}" class="text-secondary text-decoration-none">Contact</a></li>
+                        <li class="mb-2"><a href="{% url 'products:privacy_policy' %}" class="text-secondary text-decoration-none">Privacy Policy</a></li>
+                        <li class="mb-2"><a href="{% url 'products:return_policy' %}" class="text-secondary text-decoration-none">Return Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 text-md-start">
+                    <h6 class="fw-bold mb-3">Follow Us</h6>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-secondary fs-5"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-secondary fs-5"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-secondary fs-5"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-3 text-md-start">
+                    <h6 class="fw-bold mb-3">Newsletter</h6>
+                    <div class="input-group">
+                        <input type="email" class="form-control border-0" placeholder="Email address">
+                        <button class="btn btn-primary" type="button">Join</button>
+                    </div>
+                </div>
+            </div>
+            <hr class="border-secondary opacity-25">
+            <p class="text-secondary small mt-4 mb-0">&copy; 2026 E-Store. All rights reserved. Designed with <i class="fas fa-heart text-danger"></i> for excellence.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+    <script>
+        window.addEventListener("load", function () {
+            document.getElementById("skeleton-loader").style.display = "none";
+        });
+        window.addEventListener("load", function () {
+            const loader = document.getElementById("skeleton-loader");
+            loader.style.opacity = "0";
+            loader.style.transition = "0.4s ease";
+
+            setTimeout(() => {
+                loader.style.display = "none";
+            }, 400);
+        });
+    </script>
+</body>
+</html>

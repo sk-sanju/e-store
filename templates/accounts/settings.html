@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Account Settings | E-Store{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-lg p-4 p-md-5 rounded-4">
+            <h2 class="fw-bold mb-4">Account Settings</h2>
+            <form method="post">
+                {% csrf_token %}
+                <div class="row g-3">
+                    {% for field in form %}
+                        <div class="col-12">
+                            <label class="form-label small fw-bold">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="text-danger small">{{ field.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="mt-5 d-flex gap-3">
+                    <button type="submit" class="btn btn-primary flex-grow-1 py-3 rounded-3 fw-bold">Update Account</button>
+                    <a href="{% url 'accounts:profile' %}" class="btn btn-white border px-4 py-3 rounded-3 fw-bold">Cancel</a>
+                </div>
+            </form>
+            
+            <hr class="my-5">
+            
+            <div class="bg-light p-4 rounded-4">
+                <h6 class="fw-bold mb-3 text-danger">Security</h6>
+                <p class="small text-secondary mb-3">Want to change your password?</p>
+                <a href="#" class="btn btn-outline-danger btn-sm rounded-pill px-4">Change Password</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

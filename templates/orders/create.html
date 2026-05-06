@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout | E-Store{% endblock %}
+
+{% block content %}
+<h2 class="fw-bold mb-4">Checkout</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <div class="row g-5">
+        <!-- Address Selection -->
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm p-4 rounded-4 mb-4">
+                <h5 class="fw-bold mb-4">Shipping Address</h5>
+                <div class="row g-3">
+                    {% for addr in addresses %}
+                        <div class="col-12">
+                            <label class="border rounded-4 p-3 d-block cursor-pointer position-relative {% if addr.is_default %}border-primary{% endif %}">
+                                <input type="radio" name="address" value="{{ addr.id }}" class="form-check-input position-absolute top-0 end-0 m-3" {% if addr.is_default %}checked{% endif %} required>
+                                <h6 class="fw-bold mb-1">{{ addr.full_name }}</h6>
+                                <p class="small text-secondary mb-1">{{ addr.address_line_1 }}</p>
+                                <p class="small text-secondary mb-0">{{ addr.city }}, {{ addr.state }} {{ addr.zip_code }}</p>
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="mt-4">
+                    <a href="{% url 'accounts:add_address' %}" class="btn btn-link text-decoration-none px-0"><i class="fas fa-plus me-2"></i>Add new address</a>
+                </div>
+            </div>
+
+            <!-- Relatable Products (Upselling) -->
+            <div class="card border-0 shadow-sm p-4 rounded-4 mb-4 bg-primary bg-opacity-10 border-start border-primary border-4">
+                <h6 class="fw-bold mb-3"><i class="fas fa-star text-warning me-2"></i>You might also like...</h6>
+                <div class="row g-3">
+                    {% for product in relatable_products %}
+                        <div class="col-md-4">
+                            <div class="bg-white rounded-4 p-2 h-100 shadow-sm text-center">
+                                <a href="{{ product.get_absolute_url }}">
+                                    {% if product.images.all %}
+                                        <img src="{{ product.images.first.image.url }}" class="img-fluid rounded-3 mb-2" style="height: 80px; width: 100%; object-fit: cover;">
+                                    {% endif %}
+                                </a>
+                                <a href="{{ product.get_absolute_url }}" class="text-decoration-none">
+                                    <p class="small fw-bold mb-1 text-truncate text-dark">{{ product.name }}</p>
+                                </a>
+                                <p class="small text-primary fw-bold mb-2">${{ product.price }}</p>
+                                <form action="{% url 'cart:cart_add' product.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill w-100 py-1">Add</button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm p-4 rounded-4 bg-light border-0">
+                <p class="small text-secondary mb-0"><i class="fas fa-info-circle me-2"></i> You will choose your payment method in the next step.</p>
+            </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm p-4 rounded-4 sticky-top" style="top: 100px;">
+                <h5 class="fw-bold mb-4">Review Your Order</h5>
+                <div class="mb-4">
+                    {% for item in cart.items.all %}
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="badge bg-secondary rounded-circle">{{ item.quantity }}</span>
+                                <span class="small fw-600">{{ item.product.name }}</span>
+                            </div>
+                            <span class="small fw-bold">${{ item.total_price }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-secondary">Subtotal</span>
+                    <span class="fw-bold">${{ cart.total_price }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-secondary">Shipping</span>
+                    <span class="text-success fw-bold">Free</span>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between mb-4">
+                    <span class="fw-bold fs-5">Total</span>
+                    <span class="fw-bold fs-5 text-primary">${{ cart.total_price }}</span>
+                </div>
+                
+                <button type="submit" class="btn btn-primary w-100 py-3 rounded-3 fw-bold">
+                    Place Order & Pay
+                </button>
+                <p class="text-center text-secondary small mt-3">By placing your order, you agree to our Terms & Conditions.</p>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

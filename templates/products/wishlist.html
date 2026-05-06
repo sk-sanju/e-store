@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}My Wishlist | E-Store{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <h2 class="fw-bold mb-4">My Wishlist</h2>
+        
+        {% if wishlist_items %}
+            <div class="row g-4">
+                {% for item in wishlist_items %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                            <div class="position-relative">
+                                {% if item.product.images.all %}
+                                    <img src="{{ item.product.images.first.image.url }}" class="card-img-top" alt="{{ item.product.name }}" style="height: 250px; object-fit: cover;">
+                                {% else %}
+                                    <div class="bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
+                                        <i class="fas fa-image text-secondary opacity-25 fs-1"></i>
+                                    </div>
+                                {% endif %}
+                                <a href="{% url 'products:remove_from_wishlist' item.id %}" class="btn btn-light rounded-circle position-absolute top-0 end-0 m-3 shadow-sm" title="Remove from wishlist">
+                                    <i class="fas fa-times text-danger"></i>
+                                </a>
+                            </div>
+                            <div class="card-body p-4">
+                                <p class="text-secondary small mb-1">{{ item.product.category.name }}</p>
+                                <h6 class="fw-bold text-dark mb-2">{{ item.product.name }}</h6>
+                                <div class="d-flex align-items-center gap-2 mb-4">
+                                    {% if item.product.discount_price %}
+                                        <span class="fw-bold text-primary fs-5">${{ item.product.discount_price }}</span>
+                                        <span class="text-secondary text-decoration-line-through small">${{ item.product.price }}</span>
+                                    {% else %}
+                                        <span class="fw-bold text-primary fs-5">${{ item.product.price }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <a href="{{ item.product.get_absolute_url }}" class="btn btn-outline-primary flex-grow-1 rounded-pill fw-bold">View Detail</a>
+                                    <form action="{% url 'cart:cart_add' item.product.id %}" method="post" class="flex-grow-1">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-primary w-100 rounded-pill fw-bold" {% if not item.product.is_in_stock %}disabled{% endif %}>
+                                            Add to Cart
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <i class="far fa-heart text-secondary opacity-10 mb-4" style="font-size: 6rem;"></i>
+                <h4 class="fw-bold">Your wishlist is empty</h4>
+                <p class="text-secondary mb-4">Save items you like to your wishlist to find them easily later.</p>
+                <a href="{% url 'products:product_list' %}" class="btn btn-primary px-5 py-3 rounded-pill fw-bold">Start Shopping</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
