@@ -20,7 +20,7 @@ DEBUG = env('DEBUG')
 # Render + production safe hosts
 ALLOWED_HOSTS = env.list(
     'ALLOWED_HOSTS',
-    default=['127.0.0.1', 'localhost']
+    default=['127.0.0.1', 'localhost', 'e-store-gjav.onrender.com']
 )
 
 # Application definition
