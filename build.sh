@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
-
 set -o errexit
 
 pip install --upgrade pip
 
-# Clean install (VERY IMPORTANT)
+pip install --no-cache-dir Django==4.2.11
 pip install --no-cache-dir -r requirements.txt
 
 python manage.py collectstatic --noinput
