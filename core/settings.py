@@ -22,6 +22,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
     "e-store-gjav.onrender.com",
+    "estore.xenotrix.in",
 ]
 
 # Application definition
