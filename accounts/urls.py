@@ -13,4 +13,5 @@ urlpatterns = [
     path('address/add/', views.add_address, name='add_address'),
     path('address/edit/<int:address_id>/', views.edit_address, name='edit_address'),
     path('balance/add/', views.add_balance, name='add_balance'),
+    path('wallet/success/', views.wallet_success, name='wallet_success'),
 ]
