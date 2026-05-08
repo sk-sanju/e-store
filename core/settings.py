@@ -21,13 +21,11 @@ DEBUG = env('DEBUG')
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[
     "127.0.0.1",
     "localhost",
-    "e-store-gjav.onrender.com",
     "estore.xenotrix.in",
 ])
 
 # CSRF Trusted Origins for HTTPS
 CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', default=[
-    "https://e-store-gjav.onrender.com",
     "https://estore.xenotrix.in",
 ])
 
