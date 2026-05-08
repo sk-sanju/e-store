@@ -22,6 +22,7 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[
     "127.0.0.1",
     "localhost",
     "estore.xenotrix.in",
+    "www.estore.xenotrix.in",
 ])
 
 # CSRF Trusted Origins for HTTPS
